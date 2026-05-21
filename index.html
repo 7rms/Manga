@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MangaVerse</title>
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <style>
+   /*ترتيب المقاسات */
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      scroll-behavior:smooth;
+    } 
+    /* هذا تفاصيل الموقع الخص و الخلفيه النص الابيض*/
+    body{
+      font-family:'Bebas Neue', sans-serif;
+      background:black;
+      color:white;
+      letter-spacing:1px;
+    }
+
+    /* المربعات اللي بالخلفيه*/
+   
+    .manga-lines{
+      position:fixed;
+      width:100%;
+      height:100%;
+      z-index:-1;
+
+      background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+      background-size:80px 80px;
+    }
+
+    /* الهيدر و عشن يضل ثابت و برضو فيه طل وراه */
+
+    header{
+      position:fixed; 
+      top:0;
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 60px;
+
+      background:rgba(0,0,0,0.8);
+      backdrop-filter:blur(10px);
+
+      z-index:1000;
+
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo{
+      font-size:32px;
+      letter-spacing:3px;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:25px;
+      font-size:16px;
+      transition:0.3s;
+    }
+
+    nav a:hover{
+      opacity:0.5;
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:100vh;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+
+      padding-top:120px;
+    }
+
+    .hero h1{ /* عشان التايتل اللي هوMANGAVERSA ... */
+      font-size:90px;
+      letter-spacing:8px;
+      margin-bottom:10px;
+    }
+
+    .hero p{ /* ENTER THE MANGA.... الكلام اللي تحت */
+      font-size:18px;
+      opacity:0.7;
+      margin-bottom:40px;
+    }
+
+    /* BOOK الكتاب */
+
+    .book{ 
+      width:349px;
+      height:522px;
+
+      position:relative; /* التاثيير لقلب الصفحات */
+      perspective:2000px; 
+    }
+
+    .page{
+      width:100%;
+      height:100%;
+
+      position:absolute;
+
+      transform-origin:left; /* تقلب الصفحه لليسار*/
+      transition:1s; /* مده الحركه لكل صفحه */
+
+      overflow:hidden;
+      border-radius:10px;
+
+      border:4px solid white;
+
+      box-shadow:
+      0 0 20px rgba(255,255,255,0.15),
+      0 0 60px rgba(255,255,255,0.08);
+    }
+
+    .page img{
+      width:100%;
+      height:100%;
+      object-fit:cover; 
+      filter:grayscale(100%); /* يحول الصور ابيض و اسود لانك طلبت ابيض و اسود كلشي */
+    }
+
+    /* TEXT OVER IMAGE اللي بالكتاب */
+     
+    .page-content{
+      position:absolute; /* الكلام يتحرك مع الصفحه */
+      bottom:0;
+
+      width:100%; 
+
+      
+
+      background:linear-gradient( /*تدرج اللون عشان الكلام يكون واضح فوق الصفحه */
+      to top,
+      rgba(0.9,0.5,10,53.0),
+      transparent);
+
+      color:white;
+    }
+
+    .page-content h2{
+      font-size:28px;
+      margin-bottom:8px;
+    }
+
+    .page-content p{
+      font-size:14px;
+      line-height:1.6;
+    }
+
+
+    /* COLLECTION كولكشن المانقا */
+
+    .manga-section{
+      padding:120px 8%;
+    }
+
+    .section-title{
+      font-size:60px;
+      margin-bottom:60px;
+      text-align:center;
+    }
+
+    .manga-grid{ /* يرتب المانفا جمب بعض */
+      display:flex;
+      justify-content:center;
+      gap:30px;
+      flex-wrap:wrap;
+    }
+
+    .card{ 
+      width:349px;
+
+      background:#111;
+
+      border:1px solid rgba(255,255,255,0.1);
+
+      transition:0.4s;
+    }
+
+    .card:hover{ /* الحركه اللي تصير لما يمر الماوس */
+      transform:
+      translateY(-15px)
+      scale(1.03)
+      rotate(-1deg);
+
+      border-color:white;
+    }
+
+    .card img{
+      width:349px;
+      height:522px;
+
+      object-fit:contain;
+
+      filter:grayscale(100%);
+    }
+
+    .card-content{
+      padding:20px;
+    }
+
+    .card-content h3{
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .card-content span{
+      opacity:0.6;
+      font-size:14px;
+    }
+
+    .card-content p{
+      margin-top:15px;
+      line-height:1.7;
+      font-size:14px;
+      opacity:0.8;
+    }
+
+    /* ABOUT */
+
+    .about{
+      padding:120px 10%;
+      text-align:center;
+    }
+
+    .about p{
+      max-width:700px;
+      margin:auto;
+
+      line-height:2;
+      font-size:18px;
+      opacity:0.8;
+    }
+
+    /* FOOTER */
+
+    footer{
+      padding:40px;
+      text-align:center;
+      border-top:1px solid rgba(255,255,255,0.1);
+      opacity:0.6;
+    }
+
+    /* MOBILE */
+
+    @media(max-width:768px){
+
+      header{
+        padding:20px;
+      }
+
+      nav{
+        display:none;
+      }
+
+      .hero h1{
+        font-size:55px;
+      }
+
+      .section-title{
+        font-size:42px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="manga-lines"></div>
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="logo">
+      MangaVerse
+    </div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#manga">Manga</a>
+      <a href="#about">About</a>
+    </nav>
+
+  </header>
+
+  <!-- HERO -->
+
+  <section class="hero" id="home">
+
+    <h1>MangaVerse</h1>
+
+    <p>
+      Enter the Manga World
+    </p>
+
+    <!-- BOOK -->
+
+    <div class="book">
+
+      <!-- PAGE 3 -->
+
+      <div class="page" id="page3" style="z-index:1;">
+
+        <img src="v5.jpg">
+
+        <div class="page-content">
+
+          <h2>Our Mission</h2>
+
+          <p>
+            We aim to create a modern manga-reading experience where fans can explore all One Piece mangas in one place.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE 2 -->
+
+      <div class="page" id="page2" style="z-index:2;">
+
+        <img src="v8.jpg">
+
+        <div class="page-content">
+
+          <h2>Manga Culture</h2>
+
+          <p>
+            Our platform celebrates iconic manga experiences inspired by legendary Japanese manga stories.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- PAGE 1 -->
+
+      <div class="page" id="page1" style="z-index:3;">
+
+        <img src="v9.jpg">
+
+        <div class="page-content">
+
+          <h2>About MangaVerse</h2>
+
+          <p>
+            MangaVerse is a creative manga company inspired by Japanese manga worlds and immersive storytelling.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BUTTON -->
+
+
+  </section>
+
+  <!-- MANGA COLLECTION -->
+
+  <section class="manga-section" id="manga">
+
+    <h2 class="section-title">
+      Manga Collection
+    </h2>
+
+    <div class="manga-grid">
+
+      <!-- CARD 1 -->
+
+      <div class="card">
+
+        <img src="v1.jpg">
+
+        <div class="card-content">
+
+          <h3>One Piece Vol. 1</h3>
+
+          <span>Romance Dawn</span>
+
+          <p>
+            Monkey D. Luffy begins his legendary pirate journey after gaining mysterious powers.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 2 -->
+
+      <div class="card">
+
+        <img src="v3.jpg">
+
+        <div class="card-content">
+
+          <h3>One Piece Vol. 3</h3>
+
+          <span>Don't Get Fooled Again</span>
+
+          <p>
+            Luffy continues exploring dangerous oceans while chasing the dream of becoming King of the Pirates.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- CARD 3 -->
+
+      <div class="card">
+
+        <img src="v4.jpg">
+
+        <div class="card-content">
+
+          <h3>One Piece Vol. 4</h3>
+
+          <span>The Black Cat Pirates</span>
+
+          <p>
+            Captain Kuro returns from the shadows with a dangerous new plan.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+
+  <section class="about" id="about">
+
+    <h2 class="section-title">
+      About
+    </h2>
+
+    <p>
+      MangaVerse is a modern manga company focused on immersive storytelling, iconic manga experiences, and interactive digital reading inspired by Japanese manga culture.
+    </p>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    © 2026 MangaVerse — All Rights Reserved
+
+  </footer>
+
+
+  <!-- SCRIPT -->
+
+  <script>
+
+    const pages = [
+      document.getElementById('page1'),
+      document.getElementById('page2'),
+      document.getElementById('page3')
+    ];
+
+    let currentPage = 0;
+
+    function flipPage(){
+
+      if(currentPage < pages.length){
+
+        pages[currentPage].style.transform =
+        'rotateY(-180deg)';
+
+        currentPage++;
+
+      }
+
+      else{
+
+        pages.forEach(page => {
+
+          page.style.transform = 'rotateY(0deg)';
+
+        });
+
+        currentPage = 0;
+
+      }
+
+    }
+
+    /* التصفخ الذاتي */
+
+    setInterval(flipPage, 3000);
+
+  </script>
+
+</body>
+</html>
